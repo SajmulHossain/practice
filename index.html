@@ -27,6 +27,48 @@
     </div>
   </section>
 
+  <!-- Carousel Section -->
+  <section class="carousel-section">
+    <div class="carousel">
+      <div class="carousel-container">
+        <div class="carousel-slide">
+          <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&auto=format&fit=crop&q=60" alt="Technology 1">
+          <div class="carousel-caption">
+            <h3>Modern Technology</h3>
+            <p>Cutting-edge solutions for your business</p>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&auto=format&fit=crop&q=60" alt="Technology 2">
+          <div class="carousel-caption">
+            <h3>Innovation</h3>
+            <p>Stay ahead with innovative features</p>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&auto=format&fit=crop&q=60" alt="Technology 3">
+          <div class="carousel-caption">
+            <h3>Collaboration</h3>
+            <p>Work together seamlessly</p>
+          </div>
+        </div>
+      </div>
+      
+      <button class="carousel-button prev" aria-label="Previous slide">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <button class="carousel-button next" aria-label="Next slide">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+
+      <div class="carousel-dots">
+        <button class="dot active" aria-label="Go to slide 1"></button>
+        <button class="dot" aria-label="Go to slide 2"></button>
+        <button class="dot" aria-label="Go to slide 3"></button>
+      </div>
+    </div>
+  </section>
+
   <!-- Features Section -->
   <section id="features" class="features">
     <h2>Our Features</h2>
@@ -130,6 +172,75 @@
           }
         });
       });
+    });
+
+    // Carousel functionality
+    const carousel = document.querySelector('.carousel-container');
+    const slides = document.querySelectorAll('.carousel-slide');
+    const dots = document.querySelectorAll('.dot');
+    const prevButton = document.querySelector('.carousel-button.prev');
+    const nextButton = document.querySelector('.carousel-button.next');
+    let currentSlide = 0;
+    const slideCount = slides.length;
+
+    function updateCarousel() {
+      carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
+      
+      // Update dots
+      dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentSlide);
+      });
+
+      // Update buttons visibility
+      prevButton.style.opacity = currentSlide === 0 ? '0.5' : '1';
+      nextButton.style.opacity = currentSlide === slideCount - 1 ? '0.5' : '1';
+    }
+
+    function nextSlide() {
+      if (currentSlide < slideCount - 1) {
+        currentSlide++;
+        updateCarousel();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        updateCarousel();
+      }
+    }
+
+    // Event listeners
+    nextButton.addEventListener('click', nextSlide);
+    prevButton.addEventListener('click', prevSlide);
+
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        currentSlide = index;
+        updateCarousel();
+      });
+    });
+
+    // Auto-advance slides every 5 seconds
+    setInterval(nextSlide, 5000);
+
+    // Touch support for mobile
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    carousel.addEventListener('touchstart', e => {
+      touchStartX = e.changedTouches[0].screenX;
+    });
+
+    carousel.addEventListener('touchend', e => {
+      console.log(e.changedTouches);
+      console.log(touchStartX, touchEndX);
+      touchEndX = e.changedTouches[0].screenX;
+      if (touchStartX - touchEndX > 50) {
+        nextSlide();
+      } else if (touchEndX - touchStartX > 50) {
+        prevSlide();
+      }
     });
   </script>
 </body>
